@@ -3,7 +3,7 @@
 import helpers = require('./helpers');
 
 module.exports = function (module) {
-    async function listPush(key : unknown, values : unknown[],
+    async function listPush(key : string, values : unknown[],
         position : {$position : number} | undefined = undefined) {
         values = values.map(helpers.valueToString);
         // The next line calls a function in a module that has not been updated to TS yet
@@ -24,11 +24,11 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listPrepend = async function (key : unknown, value : unknown) {
+    module.listPrepend = async function (key : string, value : string) {
         if (!key) {
             return;
         }
-        const temp : unknown[] = Array.isArray(value) ? value : [value];
+        const temp : string[] = Array.isArray(value) ? value : [value];
         temp.reverse();
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -44,23 +44,23 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listAppend = async function (key : unknown, value : unknown) {
+    module.listAppend = async function (key : string, value : string) {
         if (!key) {
             return;
         }
-        const temp : unknown[] = Array.isArray(value) ? value : [value];
+        const temp : string[] = Array.isArray(value) ? value : [value];
         await listPush(key, temp);
     };
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listRemoveLast = async function (key : unknown) {
+    module.listRemoveLast = async function (key : string) {
         if (!key) {
             return;
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const value : unknown[] = await module.getListRange(key, -1, -1) as unknown[];
+        const value : string[] = await module.getListRange(key, -1, -1) as string[];
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         module.client.collection('objects').updateOne({ _key: key }, { $pop: { array: 1 } });
@@ -69,7 +69,7 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listRemoveAll = async function (key : unknown, value : unknown[]) {
+    module.listRemoveAll = async function (key : string, value : unknown[]) {
         if (!key) {
             return;
         }
@@ -90,13 +90,13 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listTrim = async function (key : unknown, start : number, stop : number) {
+    module.listTrim = async function (key : string, start : number, stop : number) {
         if (!key) {
             return;
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const value : unknown[] = await module.getListRange(key, start, stop) as unknown[];
+        const value : string[] = await module.getListRange(key, start, stop) as string[];
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         await module.client.collection('objects').updateOne({ _key: key }, { $set: { array: value } });
@@ -104,14 +104,14 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.getListRange = async function (key : unknown, start : number, stop : number) : Promise<unknown[]> {
+    module.getListRange = async function (key : string, start : number, stop : number) : Promise<string[]> {
         if (!key) {
             return;
         }
 
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const data : {array: unknown[]} = await module.client.collection('objects').findOne({ _key: key }, { array: 1 }) as {array: unknown[]};
+        const data : {array: string[]} = await module.client.collection('objects').findOne({ _key: key }, { array: 1 }) as {array: string[]};
         if (!(data && data.array)) {
             return [];
         }
@@ -121,7 +121,7 @@ module.exports = function (module) {
 
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    module.listLength = async function (key : unknown) : Promise<number> {
+    module.listLength = async function (key : string) : Promise<number> {
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const result : {count : number}[] = await module.client.collection('objects').aggregate([
